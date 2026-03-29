@@ -3,7 +3,7 @@
 const CACHE = 'liquiddiet-v2';
 
 const ASSETS = [
-    './fs.html',
+    './index.html',
     './style.css',
     './app.js',
     './auth.js',
