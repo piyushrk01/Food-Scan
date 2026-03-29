@@ -2,7 +2,7 @@
   "name": "LiquidDiet - Smart Food Tracker",
   "short_name": "LiquidDiet",
   "description": "Scan barcodes, track macros, and meet your daily calorie goals.",
-  "start_url": "./fs.html",
+  "start_url": "./index.html",
   "scope": "./",
   "display": "standalone",
   "orientation": "portrait",
