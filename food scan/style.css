@@ -1,0 +1,221 @@
+/* ================================================
+   style.css — LiquidDiet  |  Soft Blue Toy Theme
+   ================================================ */
+
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap');
+
+/* ── Variables ──────────────────────────────────── */
+:root {
+    --bg:            #F4F7FB;
+    --card:          #FFFFFF;
+    --text:          #2A3B5F;
+    --sub:           #7D89A4;
+    --blue:          #3B82F6;
+    --blue-soft:     #DBEAFE;
+    --red:           #F87171;
+    --green:         #34D399;
+
+    --shadow:        0 10px 40px rgba(59,130,246,0.08);
+    --shadow-card:   0 4px 20px rgba(59,130,246,0.07);
+    --radius:        24px;
+    --radius-sm:     16px;
+    --ease:          all 0.3s cubic-bezier(0.4,0,0.2,1);
+}
+
+/* ── Reset ──────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+    font-family: 'Poppins', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    user-select: none;
+    -webkit-tap-highlight-color: transparent;
+    overscroll-behavior: none;
+}
+
+/* ── PC Layout — center as a phone frame ─────────── */
+@media (min-width: 640px) {
+    body {
+        background: linear-gradient(135deg, #EBF4FF 0%, #F4F7FB 55%, #E8F0FE 100%);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 100vh;
+    }
+
+    #app {
+        width: 420px !important;
+        max-width: 420px !important;
+        height: 88vh !important;
+        max-height: 860px !important;
+        border-radius: 40px;
+        box-shadow: 0 30px 80px rgba(59,130,246,0.18), 0 0 0 1px rgba(59,130,246,0.08);
+        overflow: hidden;
+        position: relative !important;
+    }
+
+    /* Nav stays inside the frame on PC */
+    #bottom-nav {
+        left: 50% !important;
+        right: auto !important;
+        transform: translateX(-50%) !important;
+        width: calc(420px - 2rem) !important;
+    }
+}
+
+/* ── Strict hide ────────────────────────────────── */
+.hidden-force { display: none !important; }
+
+/* ── Soft Card ──────────────────────────────────── */
+.soft-card {
+    background: var(--card);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    border: 1px solid rgba(59,130,246,0.06);
+    transition: var(--ease);
+}
+
+/* ── Primary Button ─────────────────────────────── */
+.soft-btn {
+    background: var(--blue);
+    color: #fff;
+    border: none;
+    border-radius: var(--radius);
+    font-family: 'Poppins', sans-serif;
+    font-weight: 700;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    width: 100%;
+    box-shadow: 0 4px 15px rgba(59,130,246,0.35);
+    transition: var(--ease);
+}
+.soft-btn:disabled { opacity: 0.6; cursor: not-allowed; }
+
+/* ── Input ──────────────────────────────────────── */
+.soft-input {
+    display: block;
+    background: var(--bg);
+    border: 2px solid var(--blue-soft);
+    border-radius: var(--radius-sm);
+    color: var(--text);
+    font-family: 'Poppins', sans-serif;
+    font-size: 1rem;
+    font-weight: 500;
+    transition: var(--ease);
+}
+.soft-input:focus {
+    border-color: var(--blue);
+    outline: none;
+    background: #fff;
+    box-shadow: 0 0 0 4px rgba(59,130,246,0.1);
+}
+
+/* ── Field Label ────────────────────────────────── */
+.field-label {
+    display: block;
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--sub);
+    margin-bottom: 6px;
+}
+
+/* ── Hover Effect ───────────────────────────────── */
+.hover-soft:active { transform: scale(0.95); }
+@media (hover: hover) {
+    .hover-soft:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 24px rgba(59,130,246,0.35);
+    }
+}
+
+/* ── Logo Pulse ─────────────────────────────────── */
+@keyframes logo-pulse {
+    0%,100% { transform: scale(1);    box-shadow: 0 0 0 0   rgba(59,130,246,0.3); }
+    50%      { transform: scale(1.06); box-shadow: 0 0 0 14px rgba(59,130,246,0); }
+}
+.logo-pulse { animation: logo-pulse 2.5s infinite; }
+
+/* ── Screen Enter Animation ─────────────────────── */
+@keyframes screen-in {
+    from { opacity: 0; transform: translateY(10px); }
+    to   { opacity: 1; transform: translateY(0);    }
+}
+.screen-anim { animation: screen-in 0.28s ease forwards; }
+
+/* ── Scanner Laser ──────────────────────────────── */
+@keyframes laser {
+    0%   { transform: translateY(-150px); opacity: 0; }
+    15%  { opacity: 1; }
+    85%  { opacity: 1; }
+    100% { transform: translateY(150px);  opacity: 0; }
+}
+.scanner-laser {
+    background: var(--blue);
+    box-shadow: 0 0 18px 4px rgba(59,130,246,0.65);
+    border-radius: 4px;
+    animation: laser 2.2s infinite ease-in-out;
+}
+
+/* ── Spinner ────────────────────────────────────── */
+@keyframes spin { to { transform: rotate(360deg); } }
+.spinner {
+    width: 22px;
+    height: 22px;
+    border: 3px solid var(--blue-soft);
+    border-top-color: var(--blue);
+    border-radius: 50%;
+    animation: spin 0.7s linear infinite;
+    flex-shrink: 0;
+}
+
+/* ── Diet Log Item ──────────────────────────────── */
+.log-item {
+    background: var(--card);
+    border-radius: var(--radius-sm);
+    border: 1px solid rgba(59,130,246,0.08);
+    box-shadow: var(--shadow-card);
+    padding: 14px 16px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+    transition: var(--ease);
+}
+.log-item:hover { border-color: rgba(59,130,246,0.2); }
+
+/* ── Delete Button ──────────────────────────────── */
+.delete-btn {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    border: none;
+    background: #FEE2E2;
+    color: #EF4444;
+    font-size: 13px;
+    font-weight: 700;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    transition: var(--ease);
+}
+.delete-btn:hover { background: #EF4444; color: #fff; }
+
+/* ── Bottom Nav Buttons ─────────────────────────── */
+.nav-btn {
+    border: none;
+    background: transparent;
+    cursor: pointer;
+    line-height: 1;
+}
+.active-nav {
+    background: var(--blue-soft);
+    border-radius: 50%;
+}

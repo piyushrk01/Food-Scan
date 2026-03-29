@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>LiquidDiet - Smart Food Scanner</title>
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#3B82F6">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://unpkg.com/html5-qrcode" defer></script>
+</head>
+<body class="w-screen h-screen overflow-hidden">
+
+    <div id="app" class="h-full w-full relative">
+
+        <!-- ═══════════════════════════
+             AUTH SCREEN
+        ════════════════════════════ -->
+        <section id="auth-screen"
+                 class="absolute inset-0 flex flex-col items-center justify-center p-6 z-50 bg-[#F4F7FB]">
+            <div class="soft-card p-10 w-full max-w-sm text-center">
+
+                <div class="flex flex-col items-center mb-10">
+                    <div class="w-20 h-20 bg-[#DBEAFE] rounded-full flex items-center justify-center text-5xl mb-4 logo-pulse">
+                        🥗
+                    </div>
+                    <h1 class="text-4xl font-extrabold text-[#2A3B5F]">LiquidDiet</h1>
+                    <p class="text-[#7D89A4] mt-2 font-medium">Track. Scan. Analyze.</p>
+                </div>
+
+                <button id="btn-google-login"
+                        class="w-full soft-btn mb-6 py-4 hover-soft flex justify-center items-center gap-3 text-base">
+                    <svg class="w-5 h-5 flex-shrink-0" viewBox="0 0 24 24">
+                        <path fill="currentColor" d="M21.35,11.1H12.18V13.83H18.69C18.36,17.64 15.19,19.27 12.19,19.27C8.36,19.27 5,16.25 5,12C5,7.9 8.2,4.73 12.2,4.73C15.29,4.73 17.1,6.7 17.1,6.7L19,4.72C19,4.72 16.56,2 12.1,2C6.42,2 2.03,6.8 2.03,12C2.03,17.05 6.36,22 12.22,22C17.74,22 21.5,18.33 21.5,12.91C21.5,11.76 21.35,11.1 21.35,11.1Z"/>
+                    </svg>
+                    Continue with Google
+                </button>
+
+                <div class="flex items-center mb-5">
+                    <hr class="flex-grow border-[#DBEAFE]">
+                    <span class="px-3 text-sm text-[#7D89A4]">or Phone OTP</span>
+                    <hr class="flex-grow border-[#DBEAFE]">
+                </div>
+
+                <div id="recaptcha-container" class="mb-3 flex justify-center"></div>
+                <input type="tel" id="phone-input" placeholder="+91 9876543210"
+                       class="w-full soft-input mb-4 py-3 px-4 outline-none text-center text-lg">
+                <button id="btn-phone-login" class="w-full soft-btn py-3 hover-soft text-base">
+                    Send OTP →
+                </button>
+
+            </div>
+        </section>
+
+        <!-- ═══════════════════════════
+             ONBOARDING SCREEN
+        ════════════════════════════ -->
+        <section id="onboarding-screen"
+                 class="hidden-force absolute inset-0 flex flex-col items-center justify-center p-6 z-40 bg-[#F4F7FB]">
+            <div class="soft-card p-8 w-full max-w-sm">
+
+                <div class="text-center mb-7">
+                    <div class="text-5xl mb-3">👋</div>
+                    <h2 class="text-3xl font-bold text-[#2A3B5F]">Welcome!</h2>
+                    <p class="text-[#7D89A4] mt-1">Let's set up your daily goals.</p>
+                </div>
+
+                <label class="field-label">Age</label>
+                <input type="number" id="user-age" placeholder="e.g. 25" min="10" max="100"
+                       class="w-full soft-input mb-4 py-3 px-4 outline-none">
+
+                <label class="field-label">Weight (kg)</label>
+                <input type="number" id="user-weight" placeholder="e.g. 70" min="20" max="300"
+                       class="w-full soft-input mb-4 py-3 px-4 outline-none">
+
+                <label class="field-label">Goal</label>
+                <select id="user-goal" class="w-full soft-input mb-4 py-3 px-4 outline-none">
+                    <option value="lose">🔥 Lose Weight</option>
+                    <option value="maintain">⚖️ Maintain</option>
+                    <option value="gain">💪 Gain Muscle</option>
+                </select>
+
+                <label class="field-label">Allergies (comma separated)</label>
+                <input type="text" id="user-allergies" placeholder="e.g. peanuts, gluten"
+                       class="w-full soft-input mb-8 py-3 px-4 outline-none">
+
+                <button id="btn-save-profile" class="w-full soft-btn py-4 hover-soft text-lg font-bold">
+                    Save &amp; Start 🚀
+                </button>
+
+            </div>
+        </section>
+
+        <!-- ═══════════════════════════
+             DASHBOARD SCREEN
+        ════════════════════════════ -->
+        <section id="dashboard-screen"
+                 class="hidden-force h-full flex flex-col px-5 pt-5 pb-28 overflow-y-auto w-full bg-[#F4F7FB]">
+
+            <!-- Header -->
+            <div class="flex justify-between items-center mb-6 mt-2">
+                <div>
+                    <h2 class="text-4xl font-extrabold text-[#2A3B5F]">Today</h2>
+                    <p class="text-sm text-[#7D89A4] mt-0.5">
+                        Streak: <span id="streak-counter" class="font-bold text-[#3B82F6]">0</span> 🔥
+                    </p>
+                </div>
+                <button id="btn-share"
+                        class="w-14 h-14 soft-card rounded-full hover-soft flex items-center justify-center text-2xl text-[#3B82F6]">
+                    📤
+                </button>
+            </div>
+
+            <!-- Calorie Ring -->
+            <div class="flex justify-center mb-8 relative">
+                <svg width="200" height="200" viewBox="0 0 150 150" class="transform -rotate-90">
+                    <circle cx="75" cy="75" r="60" stroke="#DBEAFE" stroke-width="13" fill="none"/>
+                    <circle id="macro-ring-progress" cx="75" cy="75" r="60"
+                            stroke="#3B82F6" stroke-width="13" fill="none"
+                            stroke-dasharray="377" stroke-dashoffset="377"
+                            stroke-linecap="round"
+                            style="transition: stroke-dashoffset 1s ease-out, stroke 0.5s ease;"/>
+                </svg>
+                <div class="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
+                    <span id="cals-consumed" class="text-5xl font-extrabold text-[#2A3B5F]">0</span>
+                    <span class="text-sm text-[#7D89A4] mt-1">
+                        / <span id="cals-goal">2000</span> kcal
+                    </span>
+                </div>
+            </div>
+
+            <!-- Water Tracker -->
+            <div class="soft-card p-5 mb-5 flex justify-between items-center">
+                <div>
+                    <p class="font-bold text-lg text-[#2A3B5F]">💧 Water</p>
+                    <p class="text-xs text-[#7D89A4] mt-0.5">Daily glasses</p>
+                </div>
+                <div class="flex gap-4 items-center">
+                    <button id="btn-water-minus"
+                            class="w-11 h-11 rounded-full bg-[#DBEAFE] text-[#3B82F6] text-2xl font-bold hover-soft flex items-center justify-center">
+                        −
+                    </button>
+                    <span id="water-count" class="font-extrabold text-3xl w-8 text-center text-[#2A3B5F]">0</span>
+                    <button id="btn-water-plus"
+                            class="w-11 h-11 rounded-full bg-[#3B82F6] text-white text-2xl font-bold hover-soft flex items-center justify-center shadow-[0_4px_12px_rgba(59,130,246,0.4)]">
+                        +
+                    </button>
+                </div>
+            </div>
+
+            <!-- Diet Log -->
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="text-xl font-bold text-[#2A3B5F]">🍽 Diet Log</h3>
+                <span class="text-xs text-[#7D89A4] bg-[#DBEAFE] px-3 py-1 rounded-full font-semibold">Today</span>
+            </div>
+
+            <div id="diet-log-list" class="space-y-3 pb-2">
+                <div id="empty-log-msg" class="text-center text-[#7D89A4] py-10 text-sm">
+                    <div class="text-4xl mb-3">🍽</div>
+                    <p>No food logged yet.<br>Scan a product to get started!</p>
+                </div>
+            </div>
+
+        </section>
+
+        <!-- ═══════════════════════════
+             SCANNER SCREEN
+        ════════════════════════════ -->
+        <section id="scanner-screen" class="hidden-force h-full flex flex-col relative bg-black w-full">
+
+            <!-- Camera -->
+            <div id="reader" class="w-full" style="height:62vh; overflow:hidden;"></div>
+
+            <!-- Laser Line -->
+            <div class="scanner-laser absolute left-0 w-full pointer-events-none z-10"
+                 style="top:31vh; height:2px;"></div>
+
+            <!-- Result Card -->
+            <div class="soft-card absolute left-4 right-4 z-20 p-6 rounded-3xl bg-white"
+                 style="bottom:88px;">
+
+                <h3 id="scan-title" class="text-xl font-bold mb-1 text-[#2A3B5F]">📷 Scan a Barcode</h3>
+                <p id="scan-nutrition" class="text-sm text-[#7D89A4] mb-3">
+                    Align barcode inside the camera frame above.
+                </p>
+
+                <div id="scan-loading" class="hidden-force flex items-center gap-3 py-2 mb-2">
+                    <div class="spinner"></div>
+                    <span class="text-sm text-[#7D89A4]">Fetching product info...</span>
+                </div>
+
+                <div id="ai-verdict"
+                     class="hidden-force text-sm font-medium p-4 rounded-2xl mb-3 border border-[#DBEAFE]">
+                </div>
+
+                <button id="btn-add-scanned"
+                        class="hidden-force w-full soft-btn py-4 hover-soft text-base font-bold">
+                    ➕ Add to Log
+                </button>
+
+            </div>
+        </section>
+
+        <!-- ═══════════════════════════
+             BOTTOM NAV
+        ════════════════════════════ -->
+        <nav id="bottom-nav"
+             class="hidden-force fixed bottom-4 left-4 right-4 soft-card bg-white rounded-full px-8 py-3 flex justify-around items-center z-50">
+            <button id="nav-dashboard" class="nav-btn active-nav p-3 rounded-full text-2xl transition-all" title="Dashboard">
+                📊
+            </button>
+            <button id="nav-scanner"
+                    class="nav-btn p-4 bg-[#3B82F6] rounded-full -translate-y-5 shadow-[0_8px_24px_rgba(59,130,246,0.45)] text-2xl text-white transition-all hover-soft"
+                    title="Scanner">
+                📷
+            </button>
+        </nav>
+
+    </div>
+
+    <script type="module" src="firebase-config.js"></script>
+    <script type="module" src="auth.js"></script>
+    <script type="module" src="dashboard.js"></script>
+    <script type="module" src="scanner.js"></script>
+    <script type="module" src="app.js"></script>
+</body>
+</html>

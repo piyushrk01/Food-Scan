@@ -1,0 +1,26 @@
+{
+  "name": "LiquidDiet - Smart Food Tracker",
+  "short_name": "LiquidDiet",
+  "description": "Scan barcodes, track macros, and meet your daily calorie goals.",
+  "start_url": "./fs.html",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#F4F7FB",
+  "theme_color": "#3B82F6",
+  "categories": ["health", "fitness", "food"],
+  "icons": [
+    {
+      "src": "https://via.placeholder.com/192/3B82F6/FFFFFF?text=LD",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "https://via.placeholder.com/512/3B82F6/FFFFFF?text=LD",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}
